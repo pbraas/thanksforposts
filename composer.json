@@ -15,6 +15,11 @@
             "name": "rxu",
             "homepage": "http://www.phpbbguru.net",
             "role": "Converting to extension"
+        },
+        {
+            "name": "beheer Wereldfietser",
+            "homepage": "www.wereldfietser.nl",
+            "role": "Developer"
         }
     ],
     "require": {
