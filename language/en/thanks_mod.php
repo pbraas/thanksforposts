@@ -92,7 +92,7 @@ $lang = array_merge($lang, [
 	'RATING_TOP_TOPIC'			=> 'Rating topics',
 	'RATING_TOPIC'				=> 'Topic',
 
-	'THANK'						=> 'time',
+	'THANK'						=> 'keer',
 	'THANK_FROM'				=> 'from',
 	'THANK_TEXT_1'				=> 'These users thanked the author ',
 	'THANK_TEXT_2'				=> ' for the post: ',
@@ -100,8 +100,8 @@ $lang = array_merge($lang, [
 	'THANK_POST'				=> 'Say Thanks to the author of the post: ',
 	'THANK_POST_SHORT'			=> 'Thanks',
 	'THANKS'					=> [
-		1	=> '%d time',
-		2	=> '%d times',
+		1	=> '%d keer',
+		2	=> '%d keer',
 	],
 	'THANKS_BACK'				=> 'Return',
 	'THANKS_INFO_GIVE'			=> 'You have just thanked for the post.',
