@@ -39,3 +39,6 @@
 	</div>
 {% endif %}
 </div>
+{% if not postrow.S_POST_ANONYMOUS and postrow.THANKS_COUNTERS_VIEW %}
+<div class="notice" data-user-receive-id="{{ postrow.POST_ID }}">{% if postrow.POST_THANKS_COUNT %}<strong><span class="thanks-thumb-picture" aria-hidden="true"></span><span class="sr-only">{{ lang('RECEIVED') }}{{ lang('COLON') }}</span></strong><span class="thanks-count-number">{{ postrow.POST_THANKS_COUNT }}</span>{% endif %}</div>
+{% endif %}

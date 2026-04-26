@@ -48,7 +48,11 @@ $lang = array_merge($lang, [
 
 	'DISABLE_REMOVE_THANKS'		=> 'Deleting thanks has been disabled by the administrator',
 
-	'GIVEN'						=> 'Has&nbsp;thanked',
+	'GIVEN'						=> 'Duimpjes&nbsp;gegeven',
+	'GIVEN_ONE'				=> 'Duimpje&nbsp;gegeven',
+	'GIVEN_MANY'			=> 'Duimpjes&nbsp;gegeven',
+	'THANKS_GIVEN_ONE'		=> 'Duimpje&nbsp;gegeven',
+	'THANKS_GIVEN_MANY'		=> 'Duimpjes&nbsp;gegeven',
 	'GLOBAL_INCORRECT_THANKS'	=> 'You cannot give thanks for a Global Announcement that has no reference to a particular forum.',
 	'GRATITUDES'				=> 'Thanks list',
 

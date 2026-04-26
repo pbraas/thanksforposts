@@ -550,8 +550,10 @@ class helper
 			$thanks_text = $this->get_thanks_text($row['post_id']);
 			$thank_mode = $this->get_thanks_link($row['post_id']);
 			$already_thanked = $this->already_thanked($row['post_id'], $this->user->data['user_id']);
-			$l_poster_receive_count = (isset($this->poster_list_count[$poster_id]['R']) && $this->poster_list_count[$poster_id]['R']) ? $this->language->lang('THANKS', (int) $this->poster_list_count[$poster_id]['R']) : '';
-			$l_poster_give_count = (isset($this->poster_list_count[$poster_id]['G']) && $this->poster_list_count[$poster_id]['G']) ? $this->language->lang('THANKS', (int) $this->poster_list_count[$poster_id]['G']) : '';
+			$poster_give_count = (isset($this->poster_list_count[$poster_id]['G'])) ? (int) $this->poster_list_count[$poster_id]['G'] : 0;
+			$l_poster_receive_count = $thanks_number ? $this->language->lang('THANKS', (int) $thanks_number) : '';
+			// Hide the "given" counter in post profile blocks.
+			$l_poster_give_count = '';
 
 			// Correctly form URLs
 			$u_receive_count_url = $this->controller_helper->route('gfksx_thanksforposts_thankslist_controller_user', ['mode' => 'givens', 'author_id' => $poster_id, 'give' => 'false']);
@@ -566,6 +568,7 @@ class helper
 				'THANKS_FROM'				=> $this->language->lang('THANK_FROM'),
 				'POSTER_RECEIVE_COUNT'		=> $l_poster_receive_count,
 				'POSTER_GIVE_COUNT'			=> $l_poster_give_count,
+				'POSTER_GIVE_COUNT_NUM'		=> 0,
 				'POSTER_RECEIVE_COUNT_LINK'	=> $u_receive_count_url,
 				'POSTER_GIVE_COUNT_LINK'	=> $u_give_count_url,
 				'S_IS_OWN_POST'				=> $this->user->data['user_id'] == $poster_id,
@@ -900,7 +903,7 @@ class helper
 			$post_thanks_number = $this->get_thanks_number($post_id);
 			$post_reput = $post_thanks_number ? round($post_thanks_number / ($this->max_post_thanks / 100), (int) $this->config['thanks_number_digits']) : 0;
 			$post_anonymous = $poster_id == ANONYMOUS;
-			$received_count = empty($this->poster_list_count[$to_id]['R']) ? 0 : (int) $this->poster_list_count[$to_id]['R'];
+			$received_count = (int) $post_thanks_number;
 			$given_count = empty($this->poster_list_count[$from_id]['G']) ? 0 : (int) $this->poster_list_count[$from_id]['G'];
 
 			$this->template->set_filenames([
@@ -970,7 +973,9 @@ class helper
 				'received_count'	=> (int) $received_count,
 
 				'l_colon'			=> $this->language->lang('COLON'),
-				'l_given'			=> $this->language->lang('GIVEN'),
+				'l_given'			=> $this->language->lang('THANKS_GIVEN_MANY'),
+				'l_given_one'		=> $this->language->lang('THANKS_GIVEN_ONE'),
+				'l_given_many'		=> $this->language->lang('THANKS_GIVEN_MANY'),
 				'l_received'		=> $this->language->lang('RECEIVED'),
 				'l_thanks_given'	=> $this->language->lang('THANKS', $given_count),
 				'l_thanks_received'	=> $this->language->lang('THANKS', $received_count),

@@ -4,28 +4,38 @@
 
 'use strict';
 
+function removeGivenCounters() {
+	$('[data-user-give-id]').remove();
+	$('dd.profile-posts a[href*="give=true"]').closest('dd').remove();
+	$('.postprofile dd').filter(function() {
+		return /has thanked|duimpje\s+gegeven|duimpjes\s+gegeven/i.test($(this).text());
+	}).remove();
+}
+
+// Remove any stale "given/has thanked" counters rendered from old cache/output.
+removeGivenCounters();
+
 phpbb.addAjaxCallback('handle_thanks', function(res) {
 
 	var mode = res.mode;
 	var postContentId = '#post_content' + res.post_id;
 	var postReputId = '#div_post_reput' + res.post_id;
-	var givenTitle = '<strong>' + res.l_given + res.l_colon + '</strong> ';
-	var receivedTitle = '<strong>' + res.l_received + res.l_colon + '</strong> ';
+	var givenTitle = '<strong>' + (res.given_count === 1 ? res.l_given_one : res.l_given_many) + res.l_colon + '</strong> ';
+	var receivedTitle = '<strong><span class="thanks-thumb-picture" aria-hidden="true"></span><span class="sr-only">' + res.l_received + res.l_colon + '</span></strong> ';
 	var thanksLinkId = '[id="lnk_thanks_post' + res.post_id + '"]';
 	var thanksListId = '[id="list_thanks' + res.post_id + '"]';
 	var userGiveId = '[data-user-give-id="' + res.from_id + '"]';
-	var userReceiveId = '[data-user-receive-id="' + res.to_id + '"]';
+	var userReceiveId = '[data-user-receive-id="' + res.post_id + '"]';
 
-	var l_thanks_received = res.l_thanks_received;
 	var l_thanks_given = res.l_thanks_given;
 
-	var u_received = '<a href="' + res.u_received + '">' + l_thanks_received + '</a>';
 	var u_given = '<a href="' + res.u_given + '">' + l_thanks_given + '</a>';
 
 	var thanksLink = $(thanksLinkId);
 	var thanksList = $(thanksListId);
 	var userGive = $(userGiveId);
 	var userReceive = $(userReceiveId);
+	userGive.remove();
 
 	thanksLink.blur();
 	$('i',thanksLink).removeClass(mode == 'insert' ? 'fa-thumbs-o-up' : 'fa-thumbs-o-down').addClass(mode == 'insert' ? "fa-thumbs-o-down" : 'fa-thumbs-o-up');
@@ -37,32 +47,32 @@ phpbb.addAjaxCallback('handle_thanks', function(res) {
 	})
 
 	if (mode == 'insert') { // Handle thanks addition
-		if (res.received_count == 1) { // Handle received thanks count in posts miniprofiles
-			userReceive.html(receivedTitle + u_received);
+		givenTitle = '<strong>' + (res.given_count === 1 ? res.l_given_one : res.l_given_many) + res.l_colon + '</strong> ';
+		if (res.received_count >= 1) { // Handle received thanks count in posts miniprofiles
+			userReceive.html(receivedTitle + '<span class="thanks-count-number">' + res.received_count + '</span>');
 		} else {
-			$('a', userReceive).html(l_thanks_received);
+			userReceive.html('');
 		}
 
-		if (res.given_count == 1) { // Handle given thanks count in posts miniprofiles
+		if (res.given_count >= 1) { // Handle given thanks count in posts miniprofiles
 			userGive.html(givenTitle + u_given);
-		} else {
-			$('a', userGive).html(l_thanks_given);
 		}
 
 		if (!res.s_remove_thanks) { // Remove un-thank button if thanks removal is not allowed
 			thanksLink.parent('li').remove();
 		}
 	} else 	if (mode == 'delete') { // Handle thanks deletion
+		givenTitle = '<strong>' + (res.given_count === 1 ? res.l_given_one : res.l_given_many) + res.l_colon + '</strong> ';
 		if (res.received_count == 0) { // Handle received thanks count in posts miniprofiles
 			userReceive.html('');
 		} else {
-			$('a', userReceive).html(l_thanks_received);
+			userReceive.html(receivedTitle + '<span class="thanks-count-number">' + res.received_count + '</span>');
 		}
 
 		if (res.given_count == 0) { // Handle given thanks count in posts miniprofiles
 			userGive.html('');
 		} else {
-			$('a', userGive).html(l_thanks_given);
+			userGive.html(givenTitle + u_given);
 		}
 	}
 
@@ -86,6 +96,8 @@ phpbb.addAjaxCallback('handle_thanks', function(res) {
 			$(postReputId).replaceWith(value);
 		});
 	}
+
+	removeGivenCounters();
 });
 
 })(jQuery); // Avoid conflicts with other libraries
