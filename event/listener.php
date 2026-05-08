@@ -151,6 +151,12 @@ class listener implements EventSubscriberInterface
 		$member = $event['member'];
 		$user_id = (int) $member['user_id'];
 
+		// Privacy: Only show thank-yous if viewing own profile
+		if ($this->user->data['user_id'] != $user_id)
+		{
+			return;
+		}
+
 		$ex_fid_ary = array_keys($this->auth->acl_getf('!f_read', true));
 		$ex_fid_ary = (count($ex_fid_ary)) ? $ex_fid_ary : false;
 
